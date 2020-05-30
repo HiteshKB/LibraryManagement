@@ -1,0 +1,136 @@
+﻿@model IEnumerable<LibraryManagementApp.Models.BookDetails>
+
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Book Inventory</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISBN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Publisher)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Year)
+        </th>
+        <th></th>
+    </tr>
+    <tr>
+        <th>
+            <input id="SearchTitle" type="text" placeholder="Search with Title" />
+        </th>
+        <th>
+            <input id="SearchAuthor" type="text" placeholder="Search with Author" />
+        </th>
+        <th>
+            <input id="SearchISBN" type="text" placeholder="Search with ISBN" />
+        </th>
+        <th>
+        </th>
+        <th>
+        </th>
+        <th></th>
+    </tr>
+</table>
+<script>
+    var model = JSON.parse(JSON.stringify(@Html.Raw(Json.Encode(Model))));
+    $(document).ready(function () {
+        PopulateTable(model);
+    });
+
+    function PopulateTable(books) {
+        console.log(books);
+        $('.table').find('tr:gt(1)').remove();
+        $.each(books, function (k, v) {
+            console.log(k, v);
+            var user = '<tr><td>' + v.Title + '</td><td>' + v.Author + '</td><td>' + v.ISBN + '</td><td>' + v.Publisher + '</td><td>'
+                + v.Year + '</td><td><a href="\\BookDetails\\Edit?id=HKB">Edit</a> | <a href="\\BookDetails\\Details?id=HKB">Details</a> | <a href="\\BookDetails\\Delete?id=HKB">Delete</a></td></tr>'.replace(/\HKB/g, v.BookId)
+            $('.table').append(user);
+
+        });
+    };
+
+    $('#SearchTitle').keyup(function(){
+        var title = $('#SearchTitle').val();
+        var tempModel;
+        if (title.length >= 3) {
+            $('.table').find('tr:gt(1)').remove();
+
+            tempModel = jQuery.grep(model, function (k, v) {
+                return (k.Title.toLowerCase().indexOf(title.toLowerCase()) != -1);
+            });
+            PopulateTable(tempModel);
+        }
+        else {
+            PopulateTable(model);
+        }
+    });
+    $('#SearchAuthor').keyup(function(){
+        var auth = $('#SearchAuthor').val();
+        var tempModel;
+        if (auth.length >= 3) {
+            $('.table').find('tr:gt(1)').remove();
+            tempModel = jQuery.grep(model, function (k, v) {
+                return (k.Author.toLowerCase().indexOf(auth.toLowerCase()) != -1);
+            });
+            PopulateTable(tempModel);
+        }
+        else {
+            PopulateTable(model);
+        }
+    });
+    $('#SearchISBN').keyup(function(){
+        var isbn = $('#SearchISBN').val();
+        var tempModel;
+        if (isbn.length >= 3) {
+            $('.table').find('tr:gt(1)').remove();
+            tempModel = jQuery.grep(model, function (k, v) {
+                return (k.ISBN.toLowerCase().indexOf(isbn.toLowerCase()) != -1);
+            });
+            PopulateTable(tempModel);
+        }
+        else {
+            PopulateTable(model);
+        }
+    });
+</script>
+
+
+
+@*@foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ISBN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.BookId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.BookId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.BookId })
+            </td>
+        </tr>
+    }*@
